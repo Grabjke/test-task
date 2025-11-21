@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using OrderService.Core.ValueObjects.Item;
 using OrderService.Core.ValueObjects.Order;
 using OrderService.SharedKernel;
 using OrderService.SharedKernel.ValueObjects;
