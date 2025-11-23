@@ -13,6 +13,11 @@ public record OrderId : IComparable<OrderId>
     public static OrderId Empty() => new(Guid.Empty);
     public static OrderId Create(Guid id) => new(id);
     
+    public static implicit operator Guid(OrderId orderId)
+    {
+        ArgumentNullException.ThrowIfNull(orderId);
+        return orderId.Value;
+    }
     public int CompareTo(OrderId? other)
     {
         if (ReferenceEquals(this, other)) return 0;

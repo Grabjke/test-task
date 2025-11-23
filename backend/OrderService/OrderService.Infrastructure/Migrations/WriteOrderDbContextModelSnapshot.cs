@@ -59,8 +59,9 @@ namespace OrderService.Infrastructure.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<int>("Type")
-                                .HasColumnType("integer")
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasColumnType("text")
                                 .HasColumnName("discount_type");
 
                             b1.Property<decimal>("Value")
@@ -80,7 +81,7 @@ namespace OrderService.Infrastructure.Migrations
                                 .HasColumnName("name");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("Price", "OrderService.Domain.ItemManagement.Item.Price#Money", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Price", "OrderService.Domain.ItemManagement.Item.Price#Price", b1 =>
                         {
                             b1.IsRequired();
 

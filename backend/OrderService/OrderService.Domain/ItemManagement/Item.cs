@@ -15,7 +15,7 @@ public class Item : SoftDeletableEntity<ItemId>
     public Item(
         ItemId id,
         ItemName itemName,
-        Money price,
+        Price price,
         Quantity quantity,
         Description description,
         Discount discount
@@ -29,22 +29,28 @@ public class Item : SoftDeletableEntity<ItemId>
     }
 
     public ItemName Name { get; private set; }
-    public Money Price { get; private set; }
+    public Price Price { get; private set; }
     public Quantity Quantity { get; private set; }
     public Description Description { get; private set; }
     public Discount Discount { get; private set; }
 
-    internal UnitResult<Error> UpdateMainInfo(ItemName name, Money price, Quantity quantity, Description description)
+    internal UnitResult<Error> UpdateMainInfo(
+        ItemName name, 
+        Price price,
+        Quantity quantity,
+        Description description,
+        Discount discount)
     {
         Name = name;
         Price = price;
         Quantity = quantity;
         Description = description;
+        Discount = discount;
 
         return Result.Success<Error>();
     }
     
-    internal UnitResult<Error> ChangePrice(Money newPrice)
+    internal UnitResult<Error> ChangePrice(Price newPrice)
     {
         Price = newPrice;
         

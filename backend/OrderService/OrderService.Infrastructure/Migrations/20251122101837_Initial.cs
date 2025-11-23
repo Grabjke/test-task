@@ -43,7 +43,7 @@ namespace OrderService.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     order_id = table.Column<Guid>(type: "uuid", nullable: false),
                     description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
-                    discount_type = table.Column<int>(type: "integer", nullable: false),
+                    discount_type = table.Column<string>(type: "text", nullable: false),
                     discount_value = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     price_amount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),

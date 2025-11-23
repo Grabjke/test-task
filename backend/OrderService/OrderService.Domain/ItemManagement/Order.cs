@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using OrderService.Core.ValueObjects.Item;
 using OrderService.Core.ValueObjects.Order;
 using OrderService.SharedKernel;
 using OrderService.SharedKernel.ValueObjects;
@@ -14,13 +15,12 @@ public class Order : SoftDeletableEntity<OrderId>
     {
     }
 
-    private Order(
+    public Order(
         OrderId id,
         CustomerId customerId,
-        DateTime orderDate,
         Address deliveryAddress) : base(id)
     {
-        OrderDate = orderDate;
+        OrderDate = DateTime.UtcNow;
         DeliveryAddress = deliveryAddress;
         Status = Status.Created;
         CustomerId = customerId;
@@ -31,24 +31,9 @@ public class Order : SoftDeletableEntity<OrderId>
     public Status Status { get; private set; }
     public IReadOnlyList<Item> Items => _items;
 
-    public static Result<Order, Error> Create(
-        OrderId id,
-        CustomerId customerId,
-        DateTime orderDate,
-        Address address)
-    {
-        if (orderDate > DateTime.UtcNow)
-            return Errors.General.ValueIsInvalid("OrderDate не может быть в будущем");
-
-        if (orderDate < DateTime.UtcNow.AddYears(-1))
-            return Errors.General.ValueIsInvalid("OrderDate слишком старое");
-
-        return new Order(id, customerId, orderDate, address);
-    }
-
     public UnitResult<Error> AddItem(Item item)
     {
-        if (_items.Any(i => i.Id == item.Id)) 
+        if (_items.Any(i => i.Id == item.Id))
             return Errors.General.AllReadyExist();
 
         _items.Add(item);
@@ -60,7 +45,7 @@ public class Order : SoftDeletableEntity<OrderId>
         if (Status != Status.Created && Status != Status.Pending)
             return Errors.General.Failure();
 
-        var item = _items.FirstOrDefault(i => i.Id == itemId);
+        var item = _items.FirstOrDefault(i => i.Id.Value == itemId.Value);
         if (item is null)
             return Errors.General.NotFound();
 
@@ -68,9 +53,27 @@ public class Order : SoftDeletableEntity<OrderId>
         return Result.Success<Error>();
     }
 
+    public UnitResult<Error> UpdateMainInfoItem(
+        ItemId itemId,
+        ItemName name,
+        Price price,
+        Quantity quantity,
+        Description description,
+        Discount discount)
+    {
+        var item = _items.FirstOrDefault(i => i.Id.Value == itemId.Value);
+        if (item is null)
+            return Errors.General.NotFound();
+
+        item.UpdateMainInfo(name, price, quantity, description, discount);
+
+        return Result.Success<Error>();
+    }
+
     public UnitResult<Error> SetStatus(Status newStatus)
     {
         Status = newStatus;
+
         return Result.Success<Error>();
     }
 
