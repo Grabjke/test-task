@@ -61,6 +61,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
                 .HasPrecision(18, 2);
 
             disb.Property(d => d.Type)
+                .HasConversion<string>()
                 .IsRequired()
                 .HasColumnName("discount_type");
         });

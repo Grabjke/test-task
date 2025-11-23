@@ -3,9 +3,9 @@ using OrderService.SharedKernel;
 
 namespace OrderService.Core.ValueObjects.Item;
 
-public record Money
+public record Price
 {
-    private Money(decimal amount, string currency)
+    private Price(decimal amount, string currency)
     {
         Amount = amount;
         Currency = currency;
@@ -14,7 +14,7 @@ public record Money
     public decimal Amount { get; }
     public string Currency { get; }
 
-    public static Result<Money, Error> Create(decimal amount, string currency)
+    public static Result<Price, Error> Create(decimal amount, string currency)
     {
         if (amount < 0)
             return Errors.General.ValueIsInvalid("Amount");
@@ -25,6 +25,6 @@ public record Money
         if (currency.Length != 3 || !currency.All(char.IsLetter))
             return Errors.General.ValueIsInvalid("Currency code should be 3 letters");
 
-        return new Money(amount, currency.ToUpperInvariant());
+        return new Price(amount, currency.ToUpperInvariant());
     }
 }
